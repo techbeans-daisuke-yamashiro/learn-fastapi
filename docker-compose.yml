@@ -1,0 +1,14 @@
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+      args:
+        CONTAINER_USER: ${CONTAINER_USER:-appuser}
+        CONTAINER_GID: ${CONTAINER_GID:-1000}
+        CONTAINER_UID: ${CONTAINER_UID:-1000}
+    tty: true
+    volumes:
+      - ./src:/app
+      - ./data/app:/usr/local/lib/python3.12/site-psackages
