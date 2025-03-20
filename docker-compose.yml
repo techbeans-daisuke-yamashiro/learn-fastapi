@@ -12,3 +12,24 @@ services:
     volumes:
       - ./src:/app
       - ./data/app:/usr/local/lib/python3.12/site-psackages
+    ports:
+      - 8880:8000
+  mysql:
+    container_name: mysql
+    image: mysql:8.0.41
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: fastapi
+      MYSQL_PASSWORD: fastapi
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_HOSTS=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    ports:
+      - 8881:80
