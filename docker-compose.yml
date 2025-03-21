@@ -1,6 +1,8 @@
 services:
   app:
     container_name: app
+    depends_on:
+      - mysql
     build:
       context: .
       dockerfile: ./docker/app/Dockerfile
