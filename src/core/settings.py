@@ -1,9 +1,5 @@
-from fastapi import FastAPI
 from pydantic_settings import BaseSettings
-from sqlmodel import SQLModel
 from os import environ as env
-
-from routers import api_router
 
 app_root=env.get("APP_PROJECT","/app")
 
@@ -26,14 +22,4 @@ class Setting(BaseSettings):
         extra = "ignore"
         env_file = f"{app_root}/.env"
 
-
-
-#FastAPIのインスタンスを作成
-app = FastAPI()
-
-
-#設定を読み込み
-settings=Setting()
-
-#ルーターを接続
-app.include_router(api_router)
+settings = Setting()
