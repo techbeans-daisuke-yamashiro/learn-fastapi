@@ -1,5 +1,9 @@
-from core import app, settings
+from core import app
+from core import Settings
 import uvicorn
+
+# 設定オブジェクトを読み込み
+settings = Settings()
 
 if __name__ == "__main__":
     uvicorn.run(

@@ -1,39 +1,6 @@
 from fastapi import FastAPI
-from pydantic_settings import BaseSettings
-from sqlmodel import SQLModel
-from os import environ as env
+from .settings import Settings
 
-from routers import api_router
+settings = Settings()
 
-app_root=env.get("APP_PROJECT","/app")
-
-# .envをパース
-class Setting(BaseSettings):
-    # FastAPI(Uvicorn)関連
-    fastapi_port: int=8000
-    fastapi_host: str = "0.0.0.0"
-    fastapi_reload: bool = False
-    # DB関連
-    db_driver: str = "mysql"
-    db_host: str = "mysql"
-    db_port: str = "3306"
-    db_name: str = "app_db"
-    db_user: str = "fastapi"
-    db_password: str = "fastapi"
-    db_echo: bool = True
-
-    class Config:
-        extra = "ignore"
-        env_file = f"{app_root}/.env"
-
-
-
-#FastAPIのインスタンスを作成
 app = FastAPI()
-
-
-#設定を読み込み
-settings=Setting()
-
-#ルーターを接続
-app.include_router(api_router)
