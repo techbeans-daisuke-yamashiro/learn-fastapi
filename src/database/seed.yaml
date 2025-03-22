@@ -1,0 +1,7 @@
+items:
+  - name: apple
+    price: 100
+  - name: orange
+    price: 1.0
+  - name: grape
+    price: 1.5

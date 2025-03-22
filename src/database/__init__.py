@@ -1,5 +1,4 @@
 from sqlmodel import create_engine,Session
-from models import SQLModel as SQLModel_
 import sqlalchemy as sa
 from core.settings import Settings
 
