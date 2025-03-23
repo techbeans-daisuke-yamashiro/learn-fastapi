@@ -6,9 +6,8 @@ script_dir=path.dirname(__file__)
 
 import yaml
 from sqlmodel import Session, SQLModel, create_engine
-from models import get_model_by_tablename, get_tablemames
 from core.settings import Settings,app_root
-from database import get_database_url
+from database import get_database_url,get_model_by_tablename, get_tablemames
 
 from argparse import ArgumentParser
 settings = Settings()

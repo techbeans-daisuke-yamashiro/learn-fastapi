@@ -1,20 +1,19 @@
-from fastapi import APIRouter
-from models import get_model_by_tablename
-from database import session_
+from typing import List
+from fastapi import APIRouter, Depends
+from sqlmodel import Session
+from database import get_session, get_model_by_tablename
 print("spawn item.py")
-_session_=session_()
 router=APIRouter(prefix='/item',tags=["Item"])
 Item= get_model_by_tablename('items')
 
-@router.get('s')
-def read_all():
-    s = session_()
-    return Item.select_all(session=_session_)
+@router.get('s', response_model=List[Item])
+def read_all(session:Session = Depends(get_session)):
+    return Item.select_all(session=session)
 
 
-@router.get('/{id}')
-def read_item(id: int):
-    item=Item.select_by_id(id=id,session=_session_)
+@router.get('/{id}', response_model=Item)
+def read_item(id: int,session:Session = Depends(get_session)):
+    item=Item.select_by_id(id=id,session=session)
     if item == None:
         return {"message": "Not found"},404
     else:

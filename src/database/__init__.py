@@ -1,12 +1,7 @@
 from sqlmodel import create_engine,Session
-from models import SQLModel
+from models import SQLModel, setup_models
 import sqlalchemy as sa
 from core.settings import Settings
-
-
-def get_session():
-    with Session(engine) as session:
-        yield session
 
 
 def get_database_url(settings: Settings):
@@ -16,12 +11,28 @@ def get_database_url(settings: Settings):
     )
 
 
+def get_engine(settings: Settings):
+    return create_engine(get_database_url(settings=settings),echo=settings.db_echo) 
+
+
+def get_model_by_tablename(table_name:str):
+    for subclass in SQLModel.__subclasses__():
+        if subclass.__tablename__ ==table_name:
+            return subclass
+    return None
+
+
+def get_tablemames():
+    return [s.__tablename__ for s in SQLModel.__subclasses__()]
+
+
 settings = Settings()
+engine = get_engine(settings=settings)
 
-database_url=get_database_url(settings)
-engine = create_engine(database_url,echo=settings.db_echo)
-session_ = sa.orm.sessionmaker(engine, class_=Session)
 
+def get_session():
+    with Session(engine) as session:
+        yield session
 
 
 # 論理削除フィルタを定義
