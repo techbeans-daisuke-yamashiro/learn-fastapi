@@ -19,7 +19,7 @@ class ModelBaseMixin(object):
     
     @classmethod
     def select_by_id(cls,session:Session,id:int):
-        return session.query(cls).filter(cls.id==id).all()
+        return session.query(cls).filter(cls.id==id).first()
   
     @classmethod
     def select_all(cls,session:Session):

@@ -9,5 +9,5 @@ class Supplier(SQLModel, TimestampMixin,ModelBaseMixin,table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(nullable=False)
     address: str = Field(nullable=False)
-    country: str = Field(default="JP",nullable=False)
+    country: Optional[str] = Field(default="JPN",nullable=False)
 

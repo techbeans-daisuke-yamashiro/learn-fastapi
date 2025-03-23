@@ -1,20 +1,26 @@
 from sqlmodel import create_engine,Session
+from models import SQLModel
 import sqlalchemy as sa
 from core.settings import Settings
-
-settings = Settings()
-
-database_url=(
-    f"{settings.db_driver}://{settings.db_user}:{settings.db_password}@"
-    + f"{settings.db_host}:{settings.db_port}/{settings.db_name}?charset={settings.db_charset}"
-    )
-engine = create_engine(database_url,echo=settings.db_echo)
-session_ = sa.orm.sessionmaker(engine, class_=Session)
 
 
 def get_session():
     with Session(engine) as session:
         yield session
+
+
+def get_database_url(settings: Settings):
+    return (
+        f"{settings.db_driver}://{settings.db_user}:{settings.db_password}@"
+        + f"{settings.db_host}:{settings.db_port}/{settings.db_name}?charset={settings.db_charset}"
+    )
+
+
+settings = Settings()
+
+database_url=get_database_url(settings)
+engine = create_engine(database_url,echo=settings.db_echo)
+session_ = sa.orm.sessionmaker(engine, class_=Session)
 
 
 
@@ -33,7 +39,7 @@ def _add_filtering_deleted_at(execute_state):
         and not execute_state.execution_options.get("include_deleted", False)
     ):
         # モデルクラスを検索し、フィルタを適用
-        for sc in SQLModel_.__subclasses__():
+        for sc in SQLModel.__subclasses__():
             if hasattr(sc, "__table__") and hasattr(sc, "deleted_at"):
                 execute_state.statement = execute_state.statement.options(
                     sa.orm.with_loader_criteria(

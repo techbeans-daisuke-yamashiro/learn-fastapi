@@ -8,7 +8,7 @@ from alembic import context
 #from sqlmodel import SQLModel
 from core.settings import Settings
 from database import database_url
-from models import Item,Supplier,Base
+from models import Base
 
 settings = Settings()
 

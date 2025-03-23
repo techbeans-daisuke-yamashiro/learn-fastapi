@@ -1,7 +1,22 @@
+# 以下の形式で記述してください。現状BLOBは未対応です。
+#table名:
+#  - column1: value
+#    column2: 1
+#  - column1: value2
+#    column2: 2
+
 items:
   - name: apple
     price: 100
   - name: orange
     price: 1.0
+    currency: USD
   - name: grape
     price: 1.5
+    currency: EUR
+suppliers:
+  - name: 山田物産
+    address: 山梨県甲府市桜台１－２－３
+  - name: CA Fruits Tradings
+    address: 1-2-3 East st. San Jose, CA
+    country: USA

@@ -1,15 +1,33 @@
-import yaml,sys
+# サブデュレクトリ対策
+import sys
+from os import path
 sys.path.append("/app")
-
-from models import Base
+script_dir=path.dirname(__file__)
 
 import yaml
 from sqlmodel import Session, SQLModel, create_engine
-from models import Table1
-from . import 
+from models import get_model_by_tablename, get_tablemames
+from core.settings import Settings,app_root
+from database import get_database_url
 
-# SQLite の例（必要に応じて変更）
-engine = create_engine("sqlite:///database.db")
+from argparse import ArgumentParser
+settings = Settings()
+
+def get_engine(settings:Settings):
+    return create_engine(get_database_url(settings))
+
+
+def get_args()-> ArgumentParser:
+    parser = ArgumentParser(description="YAMLデータを読み込んでデータベースをシーディングします")
+    parser.add_argument('--dryrun','-r',
+                        help='読み込みテストのみを行い、実際の書き込みは実行しません。',
+                        action='store_true')
+    parser.add_argument('-f','--file',
+                        default=f"{script_dir}/seed.yaml",
+                        help='シードするデータが記述されYAMLファイルを指定します。',
+                        required=False )
+    return parser.parse_args()
+
 
 # YAML ファイルを読み込む
 def load_yaml(filepath: str):
@@ -17,20 +35,25 @@ def load_yaml(filepath: str):
         return yaml.safe_load(f)
 
 # シーディング処理
-def seed_table1(data: list[dict]):
+def seed_table(model: SQLModel, data: list[dict],engine):
     with Session(engine) as session:
         for item in data:
-            record = Table1(**item)
+            record = model(**item)
             session.add(record)
         session.commit()
 
 # メイン処理
 def main():
-    SQLModel.metadata.create_all(engine)
-    data = load_yaml("seed.yaml")
+    args = get_args()
+    engine = get_engine(settings=settings)
     
-    if "table1" in data:
-        seed_table1(data["table1"])
+    data = load_yaml(args.file)
+    for table_name in get_tablemames():
+        if args.dryrun==False:
+            seed_table(model=get_model_by_tablename(table_name),
+                    data=data[table_name],
+                    engine=engine)
 
+    
 if __name__ == "__main__":
     main()
