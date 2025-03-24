@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     fastapi_port: int = 8000
     fastapi_host: str = "0.0.0.0"
     fastapi_reload: bool = False
+    api_key: str = "fastapi"
+    app_root: str = "/app"
     # DB関連
     db_driver: str = "mysql"
     db_host: str = "mysql"
