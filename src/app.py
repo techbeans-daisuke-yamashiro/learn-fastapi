@@ -1,6 +1,6 @@
 from core import app
 from models import setup_models
-from database import get_engine
+from database.utils import engine
 from core.settings import Settings
 import uvicorn
 
@@ -8,7 +8,6 @@ import uvicorn
 settings = Settings()
 
 if __name__ == "__main__":
-    engine = get_engine(settings=settings)
     setup_models(engine)
     uvicorn.run(
         app="core:app",
