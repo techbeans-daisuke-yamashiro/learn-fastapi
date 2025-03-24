@@ -1,38 +1,10 @@
-from sqlmodel import create_engine,Session
-from models import SQLModel, setup_models
+from sqlmodel import create_engine, Session
+from models import SQLModel
 import sqlalchemy as sa
 from core.settings import Settings
 
 
-def get_database_url(settings: Settings):
-    return (
-        f"{settings.db_driver}://{settings.db_user}:{settings.db_password}@"
-        + f"{settings.db_host}:{settings.db_port}/{settings.db_name}?charset={settings.db_charset}"
-    )
 
-
-def get_engine(settings: Settings):
-    return create_engine(get_database_url(settings=settings),echo=settings.db_echo) 
-
-
-def get_model_by_tablename(table_name:str):
-    for subclass in SQLModel.__subclasses__():
-        if subclass.__tablename__ ==table_name:
-            return subclass
-    return None
-
-
-def get_tablemames():
-    return [s.__tablename__ for s in SQLModel.__subclasses__()]
-
-
-settings = Settings()
-engine = get_engine(settings=settings)
-
-
-def get_session():
-    with Session(engine) as session:
-        yield session
 
 
 # 論理削除フィルタを定義
@@ -61,4 +33,3 @@ def _add_filtering_deleted_at(execute_state):
                 )
     else:
         return
-    

@@ -1,8 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
-from database import get_session, get_model_by_tablename
-print("spawn item.py")
+from database.utils import get_model_by_tablename,get_session
 router=APIRouter(prefix='/item',tags=["Item"])
 Item= get_model_by_tablename('items')
 

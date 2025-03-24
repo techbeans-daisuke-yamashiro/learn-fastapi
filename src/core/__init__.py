@@ -1,8 +1,6 @@
-from fastapi import FastAPI
-from .settings import Settings
+from models import setup_models
 from routers import api_router
-
-settings = Settings()
+from fastapi import FastAPI
 
 app = FastAPI()
 
@@ -10,4 +8,9 @@ app.include_router(api_router)
 
 @app.get("/")
 def root():
-  return {"message":"hello from FastAPI"}
+    return {"message": "hello from FastAPI"}
+
+
+
+
+

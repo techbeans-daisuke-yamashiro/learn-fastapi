@@ -1,12 +1,14 @@
 from pydantic_settings import BaseSettings
 from os import environ as env
 
-app_root=env.get("APP_PROJECT","/app")
+app_root = env.get("APP_PROJECT", "/app")
 
 # .envをパース
+
+
 class Settings(BaseSettings):
     # FastAPI(Uvicorn)関連
-    fastapi_port: int=8000
+    fastapi_port: int = 8000
     fastapi_host: str = "0.0.0.0"
     fastapi_reload: bool = False
     # DB関連
@@ -22,5 +24,12 @@ class Settings(BaseSettings):
     class Config:
         extra = "ignore"
         env_file = f"{app_root}/.env"
+
+    def get_database_url(self):
+        return (
+            f"{self.db_driver}://{self.db_user}:{self.db_password}@"
+            + f"{self.db_host}:{self.db_port}/{self.db_name}?charset={self.db_charset}"
+        )
+
 
 settings = Settings()

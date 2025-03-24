@@ -1,11 +1,10 @@
-from sqlmodel import SQLModel
-from core.settings import Settings
+from sqlmodel import SQLModel, create_engine
+from sqlalchemy.engine import Engine
 from .base import Base
 import importlib
 import pkgutil
 import pathlib
 
-settings = Settings() 
 
 # 現在のディレクトリをベースにする
 package_dir = pathlib.Path(__file__).resolve().parent
@@ -16,10 +15,8 @@ for (_, module_name, _) in pkgutil.iter_modules([str(package_dir)]):
         importlib.import_module(f"{__name__}.{module_name}")
 
 
-def setup_models():
+def setup_models(engine: Engine):
     # SQLModelとDBを接続する
-    SQLModel.metadata.create_all(get_engine(settings))
+    SQLModel.metadata.create_all(engine)
     # SQLModelとモデルメタデータを接続しAlembicから管理できるようにする
-    SQLModel.metadata=Base.metadata
-
-
+    SQLModel.metadata = Base.metadata
