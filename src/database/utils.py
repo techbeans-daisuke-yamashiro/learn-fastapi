@@ -1,5 +1,6 @@
 from models import SQLModel 
 from sqlmodel import Session,create_engine
+from sqlalchemy.orm import sessionmaker
 from core.settings import Settings
 
 settings = Settings()
@@ -15,6 +16,9 @@ def get_model_by_tablename(table_name: str):
 
 def get_tablenames():
     return [s.__tablename__ for s in SQLModel.__subclasses__()]
+
+def make_session():
+  return sessionmaker(engine)
 
 def get_session():
     with Session(engine) as session:
