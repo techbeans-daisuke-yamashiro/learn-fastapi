@@ -35,3 +35,10 @@ services:
       - PMA_PASSWORD=root
     ports:
       - 8881:80
+  firebase:
+    container_name: firebase
+    build:
+      context: .
+      dockerfile: ./docker/firebase/Dockerfile
+    tty: true
+  
