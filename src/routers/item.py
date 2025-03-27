@@ -6,8 +6,7 @@ from database.utils import get_model_by_tablename,get_session
 from controllers import crud
 
 router=APIRouter(prefix='/item',
-  tags=["Item"],
-  description="アイテム管理")
+  tags=["Item"])
 Item= get_model_by_tablename('items')
 
 @router.get('s', response_model=List[Item],description="全取得")

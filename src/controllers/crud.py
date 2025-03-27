@@ -27,3 +27,6 @@ def read(model,id,session:Session):
     data=data.as_dict()
   return JSONResponse(content=jsonable_encoder(data),
   status_code=status)
+
+class Crud(object):
+  def __init__: 

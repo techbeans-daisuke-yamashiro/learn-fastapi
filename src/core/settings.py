@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 from os import environ as env
+from typing import Optional
 
 app_root = env.get("APP_PROJECT", "/app")
 
@@ -13,6 +14,7 @@ class Settings(BaseSettings):
     fastapi_reload: bool = False
     api_key: str = "fastapi"
     app_root: str = "/app"
+    api_key_auth: Optional[bool] = None
     # DB関連
     db_driver: str = "mysql"
     db_host: str = "mysql"
