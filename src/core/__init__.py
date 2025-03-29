@@ -7,8 +7,10 @@ from .settings import Settings
 se=Settings()
 
 
-
-app = FastAPI(dependencies=[Depends(verify_api_key)])
+app = FastAPI(
+    # API_KEYの指定があればヘッダ認証を有効化
+    dependencies=[Depends(verify_api_key)] if se.api_key else None
+    )
 
 app.include_router(api_router)
 

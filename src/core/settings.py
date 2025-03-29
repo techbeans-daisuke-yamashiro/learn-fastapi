@@ -1,29 +1,29 @@
 from pydantic_settings import BaseSettings
+from pydantic import Field
+from functools import lru_cache
 from os import environ as env
-from typing import Optional
 
-app_root = env.get("APP_PROJECT", "/app")
+app_root = env.get("APP_ROOT", "/app")
 
 # .envをパース
 
 
 class Settings(BaseSettings):
     # FastAPI(Uvicorn)関連
-    fastapi_port: int = 8000
-    fastapi_host: str = "0.0.0.0"
-    fastapi_reload: bool = False
-    api_key: str = "fastapi"
-    app_root: str = "/app"
-    api_key_auth: Optional[bool] = None
+    fastapi_port: int = Field(default=8000)
+    fastapi_host: str = Field(default="0.0.0.0")
+    fastapi_reload: bool = Field(default=False)
+    api_key: str|None = Field(default=None)
+    app_root: str = Field(default="/app")
     # DB関連
-    db_driver: str = "mysql"
-    db_host: str = "mysql"
-    db_port: str = "3306"
-    db_name: str = "app_db"
-    db_user: str = "fastapi"
-    db_password: str = "fastapi"
-    db_echo: bool = True
-    db_charset: str = "utf8"
+    db_driver: str = Field(default="mysql")
+    db_host: str = Field(default="mysql")
+    db_port: str = Field(default="3306")
+    db_name: str = Field(default="app_db")
+    db_user: str = Field(default="fastapi")
+    db_password: str = Field(default="fastapi")
+    db_echo: bool = Field(default=True)
+    db_charset: str = Field(default="utf8")
 
     class Config:
         extra = "ignore"
@@ -36,4 +36,6 @@ class Settings(BaseSettings):
         )
 
 
-settings = Settings()
+@lru_cache
+def get_settings():
+    return Settings()

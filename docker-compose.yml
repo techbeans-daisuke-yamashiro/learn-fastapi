@@ -41,4 +41,10 @@ services:
       context: .
       dockerfile: ./docker/firebase/Dockerfile
     tty: true
+    volumes:
+      - ./docker/firebase/firebase.json:/opt/firebase/firebase.json
+      - ./docker/firebase/firebase.indexes.json:/opt/firebase/firebase.indexes.json
+      - ./data/firebase/.config:/home/cloudsdk/.config
+      - ./data/firebase/.cache:/home/cloudsdk/.cache
+
   
