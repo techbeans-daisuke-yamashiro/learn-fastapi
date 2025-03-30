@@ -1,0 +1,1 @@
+* * * * * echo $(date) >> /opt/firebase/exports/log && cd /opt/firebase && npx firebase emulators:export /opt/firebase/exports/data --force

@@ -1,31 +1,15 @@
 {
-    "emulators": {
-      "auth": {
-        "host": "0.0.0.0",
-        "port": 9099
-      },
-      "functions": {
-        "host": "0.0.0.0",
-        "port": 5001
-      },
-      "firestore": {
-        "host": "0.0.0.0",
-        "port": 8080
-      },
-      "hosting": {
-        "host": "0.0.0.0",
-        "port": 5000
-      },
-      "ui": {
-        "host": "0.0.0.0",
-        "enabled": true
-      },
-      "singleProjectMode": true
+  "emulators": {
+    "auth": {
+      "host": "0.0.0.0",
+      "port": 9099
     },
-    "firestore": {
-      "rules": "firestore.rules",
-      "indexes": "firestore.indexes.json"
+    "ui": {
+      "host": "0.0.0.0",
+      "port": 4000,
+      "enabled": true
     },
-    "extensions": {
-    }
-  }
+    "singleProjectMode": true
+  },
+  "singleProjectMode": true
+}
