@@ -41,10 +41,18 @@ services:
       context: .
       dockerfile: ./docker/firebase/Dockerfile
     tty: true
+    environment:
+      PROJECT_ID: ${GCP_PROJECT_ID}
     volumes:
       - ./docker/firebase/firebase.json:/opt/firebase/firebase.json
       - ./docker/firebase/firebase.indexes.json:/opt/firebase/firebase.indexes.json
+      - ./docker/firebase/firebaserc:/home/cloudsdk/.firebaserc
       - ./data/firebase/.config:/home/cloudsdk/.config
       - ./data/firebase/.cache:/home/cloudsdk/.cache
-
-  
+      - ./data/firebase/exports:/opt/firebase/exports
+    ports:
+      - 9099:9099
+      - 14000:4000
+    command: |
+      firebase emulators:start --import=./exports/data --project ${GCP_PROJECT_ID} && \
+      sudo cr
