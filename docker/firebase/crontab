@@ -1,1 +1,1 @@
-* * * * * echo $(date) >> /opt/firebase/exports/log && cd /opt/firebase && npx firebase emulators:export /opt/firebase/exports/data --force
+*/1 * * * * /usr/local/bin/export-firebase.sh  > /dev/null 2>&1

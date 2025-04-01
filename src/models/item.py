@@ -5,6 +5,7 @@ from .base import Base
 
 SQLModel.metadata=Base.metadata
 
+
 class Item(SQLModel, TimestampMixin,ModelBaseMixin,table=True):
     __table_args__ = {'extend_existing': True}
     __tablename__ = "items"

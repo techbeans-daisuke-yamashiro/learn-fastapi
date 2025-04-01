@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     db_password: str = Field(default="fastapi")
     db_echo: bool = Field(default=True)
     db_charset: str = Field(default="utf8")
+    #firebase(GCP)関連
+    with_firebase_emulator: bool = Field(default=False)
+    firebase_emulator_host: str|None = Field(default="firebase")
 
     class Config:
         extra = "ignore"
@@ -34,7 +37,7 @@ class Settings(BaseSettings):
             f"{self.db_driver}://{self.db_user}:{self.db_password}@"
             + f"{self.db_host}:{self.db_port}/{self.db_name}?charset={self.db_charset}"
         )
-
+    
 
 @lru_cache
 def get_settings():

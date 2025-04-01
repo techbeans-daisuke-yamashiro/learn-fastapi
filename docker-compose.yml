@@ -11,6 +11,9 @@ services:
         CONTAINER_GID: ${CONTAINER_GID:-1000}
         CONTAINER_UID: ${CONTAINER_UID:-1000}
     tty: true
+    environment:
+      PROJECT_ID: ${GCP_PROJECT_ID:-example}
+      FIREBASE_AUTH_EMULATOR_HOST: firebase:9099
     volumes:
       - ./src:/app
       - ./data/app:/usr/local/lib/python3.12/site-psackages
@@ -42,11 +45,12 @@ services:
       dockerfile: ./docker/firebase/Dockerfile
     tty: true
     environment:
-      PROJECT_ID: ${GCP_PROJECT_ID}
+      PROJECT_ID: ${GCP_PROJECT_ID:-example}
+      FIREBASE_AUTH_EMULATOR_HOST: firebase:9099
     volumes:
       - ./docker/firebase/firebase.json:/opt/firebase/firebase.json
       - ./docker/firebase/firebase.indexes.json:/opt/firebase/firebase.indexes.json
-      - ./docker/firebase/firebaserc:/home/cloudsdk/.firebaserc
+      - ./docker/firebase/firebaserc:/opt/firebase/.firebaserc
       - ./data/firebase/.config:/home/cloudsdk/.config
       - ./data/firebase/.cache:/home/cloudsdk/.cache
       - ./data/firebase/exports:/opt/firebase/exports
@@ -54,5 +58,5 @@ services:
       - 9099:9099
       - 14000:4000
     command: |
-      firebase emulators:start --import=./exports/data --project ${GCP_PROJECT_ID} && \
-      sudo cr
+      firebase emulators:start  --import=./exports/data&& \
+      sudo crond -l 1 -f
