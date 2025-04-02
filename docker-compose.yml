@@ -12,6 +12,7 @@ services:
         CONTAINER_UID: ${CONTAINER_UID:-1000}
     tty: true
     environment:
+      APP_ENV: local
       PROJECT_ID: ${GCP_PROJECT_ID:-example}
       FIREBASE_AUTH_EMULATOR_HOST: firebase:9099
     volumes:
