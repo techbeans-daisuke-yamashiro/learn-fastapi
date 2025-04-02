@@ -10,5 +10,4 @@ RUN chmod +x /usr/local/bin/export-firebase.sh && \
   echo "${CONTAINER_USER} ALL=NOPASSWD: ALL" > /etc/sudoers.d/${CONTAINER_USER} && \
   npm -g install firebase-tools && \
   chown -R ${CONTAINER_USER}:$(id ${CONTAINER_USER} -g -n) ${WORKSPACE}
-COPY  --chown=${CONTAINER_USER}:${CONTAINER_USER} ./docker/firebase/crontab /var/spool/cron/crontabs/${CONTAINER_USER}
 USER cloudsdk

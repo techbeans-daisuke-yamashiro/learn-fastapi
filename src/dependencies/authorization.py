@@ -12,4 +12,4 @@ def verify_api_key(auth_header: str=Depends(api_key_header)):
       status_code = status.HTTP_403_FORBIDDEN,
       detail = "not authorized"
     )
-  
+
