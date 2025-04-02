@@ -59,5 +59,12 @@ services:
       - 9099:9099
       - 14000:4000
     command: |
-      firebase emulators:start  --import=./exports/data&& \
-      sudo crond -l 1 -f
+      firebase emulators:start  --import=./exports/data
+  cron:
+    container_name: cron
+    build:
+      context: .
+      dockerfile: ./docker/cron/Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: crond -l 1 -f
