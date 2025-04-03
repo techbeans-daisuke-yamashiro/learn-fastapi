@@ -12,3 +12,9 @@ class idTokenResponse(BaseModel):
   idToken: str
   refreshToken: str
   expiresIn: str
+
+class VerifyTokenShchema(BaseModel):
+  token: str
+
+class RefreshTokenSchema(BaseModel):
+  refresh_token: str

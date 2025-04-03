@@ -1,4 +1,4 @@
-from core.settings import Settings,emulator_ports
+from core.settings import Settings
 from schemas.auth import AuthroizationSchema
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -17,6 +17,7 @@ class Authenticate(object):
     status=200
     url = (f"{self.get_auth_endpoint()}/accounts:signInWithPassword?"
             f"key={self.__settings.firebase_api_key}" )
+    print(f"sign_in():tryng->{url}")
     try:
       payload =json.dumps({
         "email":user.email,
@@ -35,35 +36,16 @@ class Authenticate(object):
   def revoke(self,token):
     pass
   
-  def verify(self,token):
-    headers = jwt.get_unverified_header(token)
-    kid = headers.get("kid")
-
-    # 公開鍵取得（エミュレータ or 本番 Firebase）
-    certs_url = "http://firebase:9099/identitytoolkit.googleapis.com/keys"
-    res = requests.get(certs_url)
-    keys = res.json().get("keys", [])
-
-    public_key = None
-    for key in keys:
-        if key["kid"] == kid:
-            public_key = jwt.algorithms.RSAAlgorithm.from_jwk(key)
-            break
-
-    if not public_key:
-        raise ValueError("Unable to find matching public key")
-
-    try:
-        decoded = jwt.decode(token, public_key, algorithms=["RS256"])
-        return decoded  # UID は decoded['sub']
-    except JWTError as e:
-        raise ValueError(f"Token validation error: {str(e)}")
-
   def get_auth_endpoint(self,without_version=False):
+    s_=self.__settings
+    e_=s_.get_firebase_emulator_ports()
     version = "/v1" if not without_version else ""
     url = f"https://identitytoolkit.googleapis.com/{version}"
     if self.__settings.firebase_emulator_host:
-      url=(f"http://{self.__settings.firebase_emulator_host}"
-           + f":{emulator_ports['auth']}/identitytoolkit.googleapis.com"
+      url=(f"http://{s_.firebase_emulator_host}"
+           + f":{e_['auth']}/identitytoolkit.googleapis.com"
            + f"{version}")
     return url
+
+  def refresh(self,refresh_token:str):
+    pass

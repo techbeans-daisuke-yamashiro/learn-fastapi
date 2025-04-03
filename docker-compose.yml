@@ -47,17 +47,21 @@ services:
     tty: true
     environment:
       PROJECT_ID: ${GCP_PROJECT_ID:-example}
-      FIREBASE_AUTH_EMULATOR_HOST: firebase:9099
     volumes:
       - ./docker/firebase/firebase.json:/opt/firebase/firebase.json
+      - ./docker/firebase/storage.rules:/opt/firebase/storage.rules
       - ./docker/firebase/firebase.indexes.json:/opt/firebase/firebase.indexes.json
       - ./docker/firebase/firebaserc:/opt/firebase/.firebaserc
       - ./data/firebase/.config:/home/cloudsdk/.config
       - ./data/firebase/.cache:/home/cloudsdk/.cache
       - ./data/firebase/exports:/opt/firebase/exports
     ports:
-      - 9099:9099
-      - 14000:4000
+      - 9099:9099 # Authentication
+      - 8090:8090 # Cloud Firestore
+      - 9000:9000 # Realtime Database
+      - 8085:8085 # Cloud Pub/Sub
+      - 9199:9199 # Cloud Storage
+      - 14000:4000 # UI
     command: |
       firebase emulators:start  --import=./exports/data
   cron:

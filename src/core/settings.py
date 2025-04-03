@@ -5,15 +5,6 @@ from os import environ as env
 
 app_root = env.get("APP_ROOT", "/app")
 app_env = env.get("aPP_ENV","local")
-emulator_ports={
-    'auth': 9099,
-    'hosting ': 500,
-    'functions': 5001,
-    'datababse': 9000,
-    'firestore': 8080,
-    'pubsub': 8085,
-    'storage': 9199
-}
 
 
 # .envをパース
@@ -42,6 +33,9 @@ class Settings(BaseSettings):
     firebase_database_url: str = Field(default="demo-project.appspot.com")
     firebase_messaging_sender_id: str = Field(default="1234567890")
     firebase_app_id: str = Field(default="1:1234567890:web:abcdefghijklmnopqrstuvwxyz)")
+    # 認証関連（リフレッシュトークン／ログアウト済みトークンの保管）
+    refresh_token_store: str =Field(default="refresh_tokens") 
+    revoked_token_store: str =Field(default="refresh_tokens") 
 
     class Config:
         extra = "ignore"
@@ -54,16 +48,41 @@ class Settings(BaseSettings):
             + f"{self.db_host}:{self.db_port}/{self.db_name}?charset={self.db_charset}"
         )
     
-    def get_firebase_endpoints(self):
-        return {
-            "apiKey": self.firebase_api_key,
-            "authDomain": self.firebase_auth_domain,
-            "databaseURL": self.firebase_database_url,
-            "projectId": self.gcloud_project_id,
-            "storageBucket": self.firebase_storage_bucket,
-            "messagingSenderId": self.firebase_messaging_sender_id,
-            "appId": self.firebase_app_id
+    def get_firebase_emulator_ports(self):
+        return {'auth': 9099,
+            'hosting ': 500,
+            'functions': 5001,
+            'datababse': 9000,
+            'firestore': 8080,
+            'pubsub': 8085,
+            'storage': 9199
+            }
+    
+    def get_firebase_auth_config(self):
+        project_id = self.gcloud_project_id
+        return{
+            "project_id": project_id,
+            "audience": project_id,
+            "algorithm": "RS256",
+            "issuer": f"https://securetoken.google.com/{project_id}",
+            "certs_url":"https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com"
         }
+    
+    def get_firestore_config(self,environment:str):
+        cfg={
+            "production":{
+                "api_key":self.firebase_api_key,
+                "refresh_url":"https://securetoken.googleapis.com/v1/token"
+            },
+            "emulator":{
+                "api_key":"fake-api-key",
+                "refresh_url":
+                "http://localhost:9099/securetoken.googleapis.com/v1/token",
+
+            }
+        }
+        return cfg.get(environment)
+
 
 
 @lru_cache

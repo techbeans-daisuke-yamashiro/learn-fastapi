@@ -11,3 +11,4 @@ RUN chmod +x /usr/local/bin/export-firebase.sh && \
   npm -g install firebase-tools && \
   chown -R ${CONTAINER_USER}:$(id ${CONTAINER_USER} -g -n) ${WORKSPACE}
 USER cloudsdk
+COPY ./docker/firebase/storage.rules .
