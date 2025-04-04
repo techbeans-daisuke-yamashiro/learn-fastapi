@@ -77,7 +77,7 @@ class Settings(BaseSettings):
             "emulator":{
                 "api_key":"fake-api-key",
                 "refresh_url":
-                "http://localhost:9099/securetoken.googleapis.com/v1/token",
+                f"http://{self.firebase_emulator_host}:9099/securetoken.googleapis.com/v1/token",
 
             }
         }

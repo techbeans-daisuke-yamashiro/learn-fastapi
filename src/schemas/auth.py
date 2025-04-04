@@ -18,3 +18,12 @@ class VerifyTokenShchema(BaseModel):
 
 class RefreshTokenSchema(BaseModel):
   refresh_token: str
+
+class LogoutSchema(BaseModel):
+  idToken: str
+
+class RefreshedTokenSchema(BaseModel):
+  idToken: str
+  accessToken: str
+  refreshToken: str
+  expiresIn: str

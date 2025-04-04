@@ -4,6 +4,7 @@ from fastapi.security import (APIKeyHeader,
                               HTTPBearer,
                               HTTPAuthorizationCredentials)
 from core.settings import Settings
+from services.token import is_token_revoked
 from jose import jwt, JWTError
 import requests
 
@@ -20,15 +21,18 @@ def verify_api_key(auth_header: str=Depends(api_key_header)):
     )
 
 
-def verify_token(credentials:HTTPAuthorizationCredentials
+def verify_token(cred:HTTPAuthorizationCredentials
                   =Depends(auth_header)) -> dict:
-    token=credentials.credentials
-
+    token=cred.credentials
+    
     #エミュレータ有無でトークン検証を切り替え
     verify = (verify_unsigned_token 
               if settings.firebase_emulator_host else verify_signed_token)
     #print(f"verify_token(): trying with {verify}")
-    return verify(token=token)
+    claims = verify(token=token)
+    if is_token_revoked(uid=claims["sub"], issued_at=claims["iat"]):
+        raise HTTPException(status_code=401, detail="Token has been revoked")
+    return claims
 
 
 # トークン検証：トークンの有効期限のみを検査する(FirebaseEmulator用)
@@ -39,13 +43,13 @@ def verify_unsigned_token(token:str):
             raise ValueError("Missing 'sub' claim")
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Invalid token")
-    if int(dt.timestamp(dt.now())) > claims["exp"]:
+    if int(dt.now().timestamp()) > claims["exp"]:
       raise HTTPException(status_code=401, detail="Expired token")
     return claims
 
     
 
-# 本番側FireBaseAuthから公開鍵を取得しトークンを検出する
+# トークン検証：本番側FireBaseAuthから公開鍵を取得しトークンを検出する
 def verify_signed_token(token):
   config = settings.get_firebase_auth_config()
   try:
@@ -75,7 +79,7 @@ def verify_signed_token(token):
       )
 
       # 有効期限を検証
-      if int(dt.timestamp(dt.now())) > claims["exp"]:
+      if int(dt.now().timestamp()) > claims["exp"]:
         raise HTTPException(status_code=401, detail="Expired token")
 
       return claims  # {sub: UID, email: ..., etc}

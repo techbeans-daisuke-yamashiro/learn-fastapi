@@ -14,10 +14,14 @@ services:
     environment:
       APP_ENV: local
       GCLOUD_PROJECT_ID: ${GCP_PROJECT_ID:-example}
+      GOOGLE_APPLICATION_CREDENTIALS: /home/${CONTAINER_USER}/.config/credentials.json
       FIREBASE_AUTH_EMULATOR_HOST: firebase:9099
+      FIRESTORE_EMULATOR_HOST: firebase:8090
+
     volumes:
       - ./src:/app
-      - ./data/app:/usr/local/lib/python3.12/site-psackages
+      - ./data/firebase/credentials.json:/home/${CONTAINER_USER}/.config/credentials.json:ro
+      - ./data/app/.cache:/home/${CONTAINER_USER}/.cache
     ports:
       - 8880:8000
   mysql:
@@ -63,7 +67,7 @@ services:
       - 9199:9199 # Cloud Storage
       - 14000:4000 # UI
     command: |
-      firebase emulators:start  --import=./exports/data
+      firebase emulators:start  --import=./exports/data --debug
   cron:
     container_name: cron
     build:
