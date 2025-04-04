@@ -15,6 +15,7 @@ services:
       APP_ENV: local
       GCLOUD_PROJECT_ID: ${GCP_PROJECT_ID:-example}
       GOOGLE_APPLICATION_CREDENTIALS: /home/${CONTAINER_USER}/.config/credentials.json
+      #ローカルのエミュレータに接続されます。オンライン側を使いたい場合は以下各行コメントアウト
       FIREBASE_AUTH_EMULATOR_HOST: firebase:9099
       FIRESTORE_EMULATOR_HOST: firebase:8090
 

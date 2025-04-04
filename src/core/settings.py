@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     firebase_app_id: str = Field(default="1:1234567890:web:abcdefghijklmnopqrstuvwxyz)")
     # 認証関連（リフレッシュトークン／ログアウト済みトークンの保管）
     refresh_token_store: str =Field(default="refresh_tokens") 
-    revoked_token_store: str =Field(default="refresh_tokens") 
+    revoked_token_store: str = Field(default="revoked_tokens")
 
     class Config:
         extra = "ignore"
