@@ -31,7 +31,9 @@ class Authenticate(object):
       res = requests.post(url=url, headers=headers,data=payload)
       content=res.json()
       status=res.status_code
-      store_refresh_token(uid=content["localId"],token=content["refreshToken"],environment=environment_)
+      store_refresh_token(uid=content["localId"],
+                          token=content["refreshToken"],
+                          environment=environment_)
       return JSONResponse(content=jsonable_encoder(content),status_code=status)
     except Exception as e:
       print(e)
