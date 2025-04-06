@@ -1,0 +1,45 @@
+app_env: local
+app_root: /app
+gcloud_project_id: example
+# 認証関連（リフレッシュトークン／ログアウト済みトークンの保管）
+refresh_token_store: refresh_tokens
+revoked_token_store: revoked_tokens
+fastapi:
+  api_key: null
+  port: 8000
+  host: 0.0.0.0
+  reload: false
+# DB関連
+database:
+  driver: mysql
+  host: mysql
+  port: 3306
+  name: app_db
+  user: fastapi
+  password: fastapi
+  echo: true
+  charset: utf8
+#firebase(GCP)関連
+firebase:
+  emulator_host: null
+  api_key: fake-api-key
+  auth_domain: localhost
+  storage_bucket: localhost
+  database_url: sdemo-project.appspot.com
+  messaging_sender_id: 1234567890
+  app_id: 1:1234567890:web:abcdefghijklmnopqrstuvwxyz
+  emulator:
+    ports:
+      auth: 9099
+      hosting: 5000
+      functions: 5001
+      database: 9000
+      firestore: 8080
+      pubsub: 8085
+      storage: 9199
+    refresh: securetoken.googleapis.com/v1/token
+
+  urls:
+    issuer: https://securetoken.google.com/
+    certs: https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com
+    refresh: https://securetoken.googleapis.com/v1/token
